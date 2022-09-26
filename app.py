@@ -1,5 +1,5 @@
 from importlib.resources import path
-from flask import Flask,redirect, url_for, request , Response
+from flask import Flask,redirect, url_for, request , Response , render_template
 import pymongo
 from flask_pymongo import PyMongo
 import json
@@ -57,7 +57,8 @@ def login():
         try:
             data = list(db.users.find())
             print(data)
-            return Response(str(data), status=200, mimetype="application/json")
+            #return Response(str(data), status=200, mimetype="application/json")
+            return render_template("login.html")
 
         except Exception as e:
             return(str(e))
