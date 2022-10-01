@@ -1,7 +1,7 @@
 from asyncio.windows_events import NULL
 from importlib.resources import path
 from urllib import response
-from flask import Flask,redirect, url_for, request , Response , render_template
+from flask import Flask,redirect, url_for, request , Response , render_template , g, url_for
 import pymongo
 from flask_pymongo import PyMongo
 import json
@@ -31,7 +31,7 @@ except:
 def hello_world():
     return secrets.token_urlsafe(16)
 
-@app.route('/<id>/login/', methods=['POST','GET'])
+@app.route('/<id>/Register/', methods=['POST','GET'])
 def login(id):
     if request.method=='POST':
         try:
@@ -76,7 +76,43 @@ def login(id):
             return(str(e))
 
 
-@app.route('/clogin', methods=['POST','GET'])
+@app.route('/<id>/login/', methods=['POST','GET'])
+def register(id):
+    if request.method=='POST':
+        data = {"name": request.form['name'],
+            "password": request.form['password'],
+            "email": request.form['email'],
+            }
+
+        try:
+            print(list(db.users.find({},{"_id": 0 ,"company_id" : 1}))[0]['company_id'])
+            if db.users.find_one(data) and list(db.users.find({},{"_id": 0 ,"company_id" : 1}))[0]['company_id'] == id:
+                return Response(
+                    response=json.dumps(
+                        {"message": "User found successfully", "id": f"{db.users.find_one(data)['_id']}"}
+                    ),
+                    status=200,
+                    mimetype="application/json"
+                )
+            else:
+                return Response(
+                    response=json.dumps(
+                        {"message": "User not found"}
+                    ),
+                    status=200,
+                    mimetype="application/json"
+                )
+        except Exception as e:
+            return(str(e))
+    if request.method=='GET':
+        try:
+            data = list(db.users.find())
+            print(data)
+            return Response(str(data), status=200, mimetype="application/json")
+        except Exception as e:
+            return(str(e))
+
+@app.route('/creg', methods=['POST','GET'])
 def clogin():
     if request.method=='POST':
         try:
@@ -104,6 +140,42 @@ def clogin():
             return Response(str(data), status=200, mimetype="application/json")
             #return response(data, status=200, mimetype="application/json")
 
+        except Exception as e:
+            return(str(e))
+
+@app.route('/clogin', methods=['POST','GET'])
+def cregister():
+    if request.method=='POST':
+
+        data = {"cname": request.form['cname'],
+        "cpassword": request.form['cpassword'],
+        "cemail": request.form['cemail']
+        }
+        try:
+            if(db.company.find_one(data)):
+                return Response(
+                    response=json.dumps(
+                        {"message": "User found successfully"}
+                    ),
+                    status=200,
+                    mimetype="application/json"
+                )
+            else:
+                return Response(
+                    response=json.dumps(
+                        {"message": "User not found"}
+                    ),
+                    status=200,
+                    mimetype="application/json"
+                )
+        except Exception as e:
+            return(str(e))
+
+    if request.method=='GET':
+        try:
+            data = list(db.company.find())
+            print(data)
+            return Response(str(data), status=200, mimetype="application/json")
         except Exception as e:
             return(str(e))
     
