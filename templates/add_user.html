@@ -16,21 +16,23 @@
             <h2>Your one stop solution for facial recognition services</h2>
         </div>
         <div class="row d-flex justify-content-start align-items-start h-100 w-50 mt-5">
-          <form>
+          <form method="POST"  enctype="multipart/form-data">
             
             <div class="form-outline mb-5">
                 <label class="form-label" for="form3Example3">Username</label>
-                <input type="text" id="form3Example3" class="form-control form-control-lg"
+                <input type="text" id="form3Example3" class="form-control form-control-lg" name="name"
                   placeholder="Enter username" required/>
             </div>
 
             <div class="form-outline mb-5">
-                <input type="file" value="Upload Images" multiple required>
+                <input type="file" name='file' value="Upload Images" required>
             </div>
   
             <div class="text-center text-lg-start mt-4 pt-2">
-              <button type="button" class="btn btn-primary btn-lg"
-                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+              <!-- <button type="button" class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button> -->
+                <input type="submit" value="Register" class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">
               <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="#!"
                   class="link-danger">Add User</a></p>
             </div>

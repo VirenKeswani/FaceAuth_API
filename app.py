@@ -58,7 +58,7 @@ for i in folders:
             known_face_names.append(face_name)
             known_face_encodings.append(face_recognition.face_encodings(newface)[0])
             
-            
+
 camera = cv2.VideoCapture(0)
 face_locations = []
 face_encodings = []
@@ -84,6 +84,7 @@ def gen_frames():
             # Find all the faces and face encodings in the current frame of video
             face_locations = face_recognition.face_locations(rgb_small_frame)
             face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+            
             face_names = []
             for face_encoding in face_encodings:
                 # See if the face is a match for the known face(s)
@@ -144,9 +145,10 @@ def video_feed():
 def getface():
     print(detected_face[0])
     return str(detected_face)
-# @app.route('/')
-# def index():
-#     return render_template('landing_page.ejs')
+
+@app.route('/int')
+def face():
+    return render_template("index.html")
 
    
     
@@ -158,8 +160,8 @@ def login(id):
             key= secrets.token_urlsafe(16)
 
             user={"name": request.form['name'],
-            "password": request.form['password'],
-            "email": request.form['email'],
+            # "password": request.form['password'],
+            # "email": request.form['email'],
             "api_key": key,
             "company_id": id
             }
@@ -167,6 +169,12 @@ def login(id):
             path = os.path.join("./known_users", key)
             os.mkdir(path)
             dbRes = db.users.insert_one(user)
+
+            #accept file from form 
+            file = request.files['file']
+            print(file)
+            #save file to folder
+            file.save(os.path.join(path, request.form['name']+".jpg"))
             return Response(
                 response=json.dumps(
                     {"message": "User created successfully", "id": f"{dbRes.inserted_id}"}
@@ -184,13 +192,14 @@ def login(id):
             print('\n\n',cmp[0]['company_id'],'\n\n')
             # if len(cmp)!=0:
             #if cmp equals to the id
-            if cmp[0]['company_id']==id:
-                print(data, "here")
-                return Response(str(data), status=200, mimetype="application/json")
+            # if cmp[0]['company_id']==id:
+            #     print(data, "here")
+                # return Response(str(data), status=200, mimetype="application/json")
                 # return render_template("login.html")
-            else:
-                throw = "No user found"
-                return Response(str(throw), status=200, mimetype="application/json")
+            return render_template("add_user.html")
+            # else:
+            #     throw = "No user found"
+            #     return Response(str(throw), status=200, mimetype="application/json")
 
         except Exception as e:
             return(str(e))
@@ -228,7 +237,8 @@ def register(id):
         try:
             data = list(db.users.find())
             print(data)
-            return Response(str(data), status=200, mimetype="application/json")
+            # return Response(str(data), status=200, mimetype="application/json")
+            return render_template("add_user.html")
         except Exception as e:
             return(str(e))
 
@@ -267,7 +277,7 @@ def clogin():
 
 @app.route('/<id>')
 def company(id):
-    return render_template("dashboard.html", id=id)
+    return render_template("dashboard.ejs", id=id)
 
 @app.route('/', methods=['POST','GET'])
 def cregister():
