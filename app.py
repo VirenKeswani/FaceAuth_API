@@ -186,10 +186,10 @@ def login(id):
             return(str(e))
     if request.method=='GET':
         try:
-            data = list(db.users.find())
-            cmp = list(db.users.find({},{"_id": 0 ,"company_id" : 1}))
+            # data = list(db.users.find())
+            # cmp = list(db.users.find({},{"_id": 0 ,"company_id" : 1}))
             #if cmp does not exist in the db
-            print('\n\n',cmp[0]['company_id'],'\n\n')
+            # print('\n\n',cmp[0]['company_id'],'\n\n')
             # if len(cmp)!=0:
             #if cmp equals to the id
             # if cmp[0]['company_id']==id:
