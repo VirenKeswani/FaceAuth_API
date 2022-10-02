@@ -19,3 +19,12 @@
 h1{
     font-family: 'Yeseva One', cursive;
 }
+
+.board1{
+    scale: 1.5;
+}
+
+.names{
+    padding: 0.5rem;
+    font-weight: 700;
+}
