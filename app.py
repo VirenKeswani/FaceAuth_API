@@ -144,18 +144,9 @@ def video_feed():
 def getface():
     print(detected_face[0])
     return str(detected_face)
-@app.route('/')
-# def hello_world():
-#     return secrets.token_urlsafe(16)
-def index():
-    print(request.method)
-    if request.method == 'GET':
-        return render_template('index.html')
-    else:
-        return redirect('/getface' , code=302)
-    # print(detected_face)
-    # while detected_face != 'none':
-    #     return render_template('login.html', name=detected_face)
+# @app.route('/')
+# def index():
+#     return render_template('landing_page.ejs')
 
    
     
@@ -253,42 +244,59 @@ def clogin():
             }
 
             dbRes = db.company.insert_one(company)
-            return Response(
-                response=json.dumps(
-                    {"message": "User created successfully", "id": f"{dbRes.inserted_id}"}
-                ),
-                status=200,
-                mimetype="application/json"
-            )
+            # return Response(
+            #     response=json.dumps(
+            #         {"message": "User created successfully", "id": f"{dbRes.inserted_id}"}
+            #     ),
+            #     status=200,
+            #     mimetype="application/json"
+            # )
+            return redirect(f'/{key}')
         except Exception as e:
             return(str(e))
     if request.method=='GET':
         try:
-            data = list(db.company.find())
-            print(data)
-            return Response(str(data), status=200, mimetype="application/json")
+            # data = list(db.company.find())
+            # print(data)
+            # return Response(str(data), status=200, mimetype="application/json")
             #return response(data, status=200, mimetype="application/json")
+            return render_template("register.html")
 
         except Exception as e:
             return(str(e))
 
-@app.route('/clogin', methods=['POST','GET'])
+@app.route('/<id>')
+def company(id):
+    return render_template("dashboard.html", id=id)
+
+@app.route('/', methods=['POST','GET'])
 def cregister():
     if request.method=='POST':
 
         data = {
-            "cpassword": request.form['cpassword'],
-            "cemail": request.form['cemail']
+            "cemail": request.form['cemail'],
+            "cpassword": request.form['cpassword']
         }
         try:
             if(db.company.find_one(data)):
-                return Response(
-                    response=json.dumps(
-                        {"message": "User found successfully"}
-                    ),
-                    status=200,
-                    mimetype="application/json"
-                )
+                # return Response(
+                #     response=json.dumps(
+                #         {"message": "User found successfully"}
+                #     ),
+                #     status=200,
+                #     mimetype="application/json"
+                # )
+                cmpid=""
+                k=0
+                print(list(db.company.find({},{"_id": 0 ,"capi_key" : 1}))[2]['capi_key'])
+                for i in list(db.company.find({},{"_id": 0 ,"cemail" : 1 , "cpassword" : 1})):
+                    print(k)
+                    if i == data:
+                        cmpid=list(db.company.find({},{"_id": 0 ,"capi_key" : 1}))[k]['capi_key']
+                        print(cmpid)
+                        print(k)
+                    k+=1
+                return redirect(f'/{cmpid}')
             else:
                 return Response(
                     response=json.dumps(
@@ -304,7 +312,8 @@ def cregister():
         try:
             data = list(db.company.find())
             print(data)
-            return Response(str(data), status=200, mimetype="application/json")
+            # return Response(str(data), status=200, mimetype="application/json")
+            return render_template('landing_page.ejs')
         except Exception as e:
             return(str(e))
     
