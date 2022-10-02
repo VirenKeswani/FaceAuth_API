@@ -287,6 +287,7 @@ def cregister():
             "cemail": request.form['cemail'],
             "cpassword": request.form['cpassword']
         }
+        print(db.company.find_one(data))
         try:
             if(db.company.find_one(data)):
                 # return Response(
@@ -298,7 +299,7 @@ def cregister():
                 # )
                 cmpid=""
                 k=0
-                print(list(db.company.find({},{"_id": 0 ,"capi_key" : 1}))[2]['capi_key'])
+                print(list(db.company.find({},{"_id": 0 ,"capi_key" : 1})))
                 for i in list(db.company.find({},{"_id": 0 ,"cemail" : 1 , "cpassword" : 1})):
                     print(k)
                     if i == data:
