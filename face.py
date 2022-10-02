@@ -1,5 +1,6 @@
 import face_recognition
 import cv2
+import os
 import numpy as np
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
@@ -15,22 +16,49 @@ import numpy as np
 video_capture = cv2.VideoCapture(0)
 
 # Load a sample picture and learn how to recognize it.
-obama_image = face_recognition.load_image_file("trial.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+# obama_image = face_recognition.load_image_file("trial.jpg")
+# obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 
-# Load a second sample picture and learn how to recognize it.
-biden_image = face_recognition.load_image_file("md.png")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+# # Load a second sample picture and learn how to recognize it.
+# # biden_image = face_recognition.load_image_file("md.png")
+# # biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 
-# Create arrays of known face encodings and their names
+# #find number of folders in the folder
+# path  = './known_users'
+# folders = os.listdir(path)
+# print(folders)
+
+
+
+# # Create arrays of known face encodings and their names
+# known_face_encodings = [
+#     obama_face_encoding,
+
+# ]
+# known_face_names = [
+#     "Viren Keswani",
+# ]
+
 known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding
+
 ]
 known_face_names = [
-    "Viren Keswani",
-    "Joe Biden"
 ]
+
+path  = './known_users'
+folders = os.listdir(path)
+for i in folders:
+    # print(i,"\n")
+    #list all the files in the folder
+    files = os.walk(os.path.join(path,i))
+    for j in files:
+        k=j[2]
+        for l in k:
+            face_name = l.split('.')[0]
+            print(face_name)
+            newface = face_recognition.load_image_file(os.path.join(path,i,l))
+            known_face_names.append(face_name)
+            known_face_encodings.append(face_recognition.face_encodings(newface)[0])
 
 # Initialize some variables
 face_locations = []
